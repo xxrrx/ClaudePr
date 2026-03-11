@@ -26,7 +26,7 @@ export const products = [
     sku: 'SAM-S24U-256',
     category_id: 1,
     description: 'Galaxy S24 Ultra với bút S Pen tích hợp, camera 200MP, màn hình Dynamic AMOLED 2X 6.8 inch, pin 5000mAh.',
-    image: 'https://images.unsplash.com/photo-1706439571780-5956c87e8a3e?w=400&h=400&fit=crop',
+    image: 'https://cdn.tgdd.vn/Products/Images/42/307174/samsung-galaxy-s24-ultra-5g-600x600.jpg',
     status: 'active',
   },
   {
@@ -92,7 +92,7 @@ export const products = [
     sku: 'APPLE-USBC-2M',
     category_id: 3,
     description: 'Cáp USB-C chính hãng Apple, hỗ trợ sạc nhanh 60W, truyền dữ liệu tốc độ cao, dài 2m.',
-    image: 'https://images.unsplash.com/photo-1583863788434-e62bd3d5b5e9?w=400&h=400&fit=crop',
+    image: 'https://cdn.tgdd.vn/Products/Images/58/214762/cap-type-c-type-c-2m-mbest-smxu75-trang1.jpg',
     status: 'active',
   },
   {
