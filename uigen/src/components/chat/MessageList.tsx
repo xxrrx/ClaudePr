@@ -2,23 +2,42 @@
 
 import { Message } from "ai";
 import { cn } from "@/lib/utils";
-import { User, Bot, Loader2 } from "lucide-react";
+import { User, Bot } from "lucide-react";
 import { MarkdownRenderer } from "./MarkdownRenderer";
 
 interface MessageListProps {
   messages: Message[];
   isLoading?: boolean;
+  onSuggestionClick?: (text: string) => void;
 }
 
-export function MessageList({ messages, isLoading }: MessageListProps) {
+const SUGGESTIONS = [
+  "A pricing card with 3 tiers",
+  "A login form with validation",
+  "A responsive navigation bar",
+  "A data table with sorting",
+];
+
+export function MessageList({ messages, isLoading, onSuggestionClick }: MessageListProps) {
   if (messages.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center h-full px-4 text-center">
         <div className="flex items-center justify-center w-14 h-14 rounded-2xl bg-blue-50 mb-4 shadow-sm">
           <Bot className="h-7 w-7 text-blue-600" />
         </div>
-        <p className="text-neutral-900 font-semibold text-lg mb-2">Start a conversation to generate React components</p>
-        <p className="text-neutral-500 text-sm max-w-sm">I can help you create buttons, forms, cards, and more</p>
+        <p className="text-neutral-900 font-semibold text-lg mb-1">What shall we build?</p>
+        <p className="text-neutral-500 text-sm max-w-sm mb-6">Describe a React component and I&apos;ll generate it live</p>
+        <div className="grid grid-cols-2 gap-2 w-full max-w-xs">
+          {SUGGESTIONS.map((suggestion) => (
+            <button
+              key={suggestion}
+              onClick={() => onSuggestionClick?.(suggestion)}
+              className="text-left px-3 py-2.5 rounded-full border border-neutral-200 bg-white text-xs text-neutral-700 hover:border-blue-400 hover:text-blue-700 hover:bg-blue-50 transition-all shadow-sm"
+            >
+              {suggestion}
+            </button>
+          ))}
+        </div>
       </div>
     );
   }
@@ -49,8 +68,8 @@ export function MessageList({ messages, isLoading }: MessageListProps) {
               <div className={cn(
                 "rounded-xl px-4 py-3",
                 message.role === "user" 
-                  ? "bg-blue-600 text-white shadow-sm" 
-                  : "bg-white text-neutral-900 border border-neutral-200 shadow-sm"
+                  ? "bg-blue-600 text-white shadow-sm"
+                  : "bg-blue-50/30 text-neutral-900 border border-blue-100 shadow-sm"
               )}>
                 <div className="text-sm">
                   {message.parts ? (
@@ -76,17 +95,22 @@ export function MessageList({ messages, isLoading }: MessageListProps) {
                             );
                           case "tool-invocation":
                             const tool = part.toolInvocation;
+                            const fileName = (tool.args as any)?.path || (tool.args as any)?.file_path;
                             return (
                               <div key={partIndex} className="inline-flex items-center gap-2 mt-2 px-3 py-1.5 bg-neutral-50 rounded-lg text-xs font-mono border border-neutral-200">
                                 {tool.state === "result" && tool.result ? (
                                   <>
                                     <div className="w-2 h-2 rounded-full bg-emerald-500"></div>
-                                    <span className="text-neutral-700">{tool.toolName}</span>
+                                    <span className="text-neutral-700">{tool.toolName}{fileName ? ` → ${fileName}` : ""}</span>
                                   </>
                                 ) : (
                                   <>
-                                    <Loader2 className="w-3 h-3 animate-spin text-blue-600" />
-                                    <span className="text-neutral-700">{tool.toolName}</span>
+                                    <span className="flex gap-0.5">
+                                      <span className="w-1 h-1 rounded-full bg-blue-400 animate-bounce [animation-delay:0ms]" />
+                                      <span className="w-1 h-1 rounded-full bg-blue-400 animate-bounce [animation-delay:150ms]" />
+                                      <span className="w-1 h-1 rounded-full bg-blue-400 animate-bounce [animation-delay:300ms]" />
+                                    </span>
+                                    <span className="text-neutral-700">{tool.toolName}{fileName ? ` → ${fileName}` : ""}</span>
                                   </>
                                 )}
                               </div>
@@ -106,9 +130,10 @@ export function MessageList({ messages, isLoading }: MessageListProps) {
                       {isLoading &&
                         message.role === "assistant" &&
                         messages.indexOf(message) === messages.length - 1 && (
-                          <div className="flex items-center gap-2 mt-3 text-neutral-500">
-                            <Loader2 className="h-3 w-3 animate-spin" />
-                            <span className="text-sm">Generating...</span>
+                          <div className="flex items-center gap-1 mt-3">
+                            <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-bounce [animation-delay:0ms]" />
+                            <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-bounce [animation-delay:150ms]" />
+                            <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-bounce [animation-delay:300ms]" />
                           </div>
                         )}
                     </>
@@ -121,9 +146,10 @@ export function MessageList({ messages, isLoading }: MessageListProps) {
                   ) : isLoading &&
                     message.role === "assistant" &&
                     messages.indexOf(message) === messages.length - 1 ? (
-                    <div className="flex items-center gap-2 text-neutral-500">
-                      <Loader2 className="h-3 w-3 animate-spin" />
-                      <span className="text-sm">Generating...</span>
+                    <div className="flex items-center gap-1">
+                      <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-bounce [animation-delay:0ms]" />
+                      <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-bounce [animation-delay:150ms]" />
+                      <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-bounce [animation-delay:300ms]" />
                     </div>
                   ) : null}
                 </div>
