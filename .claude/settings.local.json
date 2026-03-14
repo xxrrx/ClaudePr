@@ -1,8 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Bash(find src/components -name \"*.tsx\" -type f | xargs grep -l \"useState\\\\|useRef\\\\|useEffect\" | head -15)",
-      "Bash(find src:*)"
-    ]
-  }
-}
